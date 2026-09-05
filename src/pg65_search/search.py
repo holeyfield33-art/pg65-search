@@ -41,7 +41,9 @@ class Searcher:
         cands = state.legal_candidates()
         if not cands:
             return None
-        scored = [(score_candidate(c, state), c) for c in cands]
+        sample_size = min(len(cands), max(32, self.candidate_pool * 4))
+        sample = self.rng.sample(cands, sample_size)
+        scored = [(score_candidate(c, state), c) for c in sample]
         scored.sort()
         pool = scored[: self.candidate_pool]
         return self.rng.choice(pool)[1]
